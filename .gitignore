@@ -1,0 +1,7 @@
+.idea
+node_modules
+auth
+env.example.js
+env.ts
+env.js
+client.js
