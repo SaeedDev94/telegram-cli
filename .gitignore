@@ -1,8 +1,7 @@
 .idea
 node_modules
 auth
-media/*
-!media/.gitkeep
+media
 env.example.js
 env.ts
 env.js
