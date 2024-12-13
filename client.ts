@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
+import { createWriteStream } from 'fs';
 import { createInterface } from 'readline';
-import { writeFileSync } from 'fs';
 import { TelegramClient } from 'telegram';
 import { StoreSession } from 'telegram/sessions';
 import { TelegramClientParams } from 'telegram/client/telegramBaseClient';
@@ -45,20 +45,16 @@ class Client {
       }
       console.log(`Downloading #${message.id} media:`);
       const path = mediaPath(message.id);
-      const file = await client.downloadMedia(message.media, {
+      await client.downloadMedia(message.media, {
+        outputFile: createWriteStream(path),
         progressCallback: (downloaded, total) => {
-          const progress = downloaded.divide(total).multiply(100);
+          const progress = downloaded.multiply(100).divide(total);
           process.stdout.clearLine(0);
           process.stdout.cursorTo(0);
           process.stdout.write(`${progress}%`);
         },
       });
       process.stdout.write('\n');
-      if (!file) {
-        console.warn(`Failed to download #${message.id} media!`);
-        return;
-      }
-      writeFileSync(path, file);
       console.log(`#${message.id} downloaded successfully: ${path}`);
     }
   }
